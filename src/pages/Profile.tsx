@@ -1,24 +1,12 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { analytics } from '../analytics/events'
+import { trackStepEnter } from '../analytics/events'
 
 export function Profile() {
-  const navigate = useNavigate()
+  const flow = 'consulta_cpf'
 
   useEffect(() => {
-    analytics.profileAccessed()
+    trackStepEnter(flow, 'profile')
   }, [])
 
-  function goToPayment() {
-    navigate('/pagamento')
-  }
-
-  return (
-    <>
-      <h2>Perfil</h2>
-      <button onClick={goToPayment}>
-        Ir para pagamento
-      </button>
-    </>
-  )
+  return <h2>Perfil</h2>
 }

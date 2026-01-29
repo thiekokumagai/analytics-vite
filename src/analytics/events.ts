@@ -1,37 +1,59 @@
-import posthog from 'posthog-js'
+import { trackTotemEvent } from './ga'
+import type { TotemStep, TotemStatus } from './types'
 
-export const analytics = {
-  serviceAccessed(serviceId: string) {
-    posthog.capture('service_accessed', { service_id: serviceId })
-  },
+export function trackStepEnter(flow: string, step: TotemStep) {
+  trackTotemEvent({
+    flow,
+    step,
+    action: 'enter',
+  })
+}
 
-  serviceFinished(serviceId: string, status: 'success' | 'error') {
-    posthog.capture('service_finished', {
-      service_id: serviceId,
-      status,
-    })
-  },
+export function trackStepExit(
+  flow: string,
+  step: TotemStep,
+  durationMs: number
+) {
+  trackTotemEvent({
+    flow,
+    step,
+    action: 'exit',
+    duration_ms: durationMs,
+  })
+}
 
-  serviceExited(serviceId: string, duration: number) {
-    posthog.capture('service_exited', {
-      service_id: serviceId,
-      duration_seconds: duration,
-    })
-  },
+export function trackSubmit(
+  flow: string,
+  step: TotemStep,
+  status: TotemStatus,
+  errorCode?: string
+) {
+  trackTotemEvent({
+    flow,
+    step,
+    action: 'submit',
+    status,
+    error_code: errorCode,
+  })
+}
 
-  profileAccessed() {
-    posthog.capture('profile_accessed')
-  },
+export function trackSelect(
+  flow: string,
+  step: TotemStep,
+  method: string
+) {
+  trackTotemEvent({
+    flow,
+    step,
+    action: 'select',
+    method,
+  })
+}
 
-  paymentAccessed() {
-    posthog.capture('payment_accessed')
-  },
-
-  paymentMethod(method: 'pix' | 'boleto' | 'cartao') {
-    posthog.capture('payment_method_selected', { method })
-  },
-
-  qrCodeViewed() {
-    posthog.capture('qr_code_viewed')
-  },
+export function trackView(flow: string, step: TotemStep) {
+  trackTotemEvent({
+    flow,
+    step,
+    action: 'view',
+  })
 }

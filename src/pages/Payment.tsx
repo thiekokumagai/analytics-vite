@@ -1,28 +1,27 @@
-import { analytics } from '../analytics/events'
+import { useEffect } from 'react'
+import { trackStepEnter, trackSelect } from '../analytics/events'
 
 export function Payment() {
+  const flow = 'consulta_cpf'
+
+  useEffect(() => {
+    trackStepEnter(flow, 'payment')
+  }, [])
+
   return (
     <>
       <h2>Pagamento</h2>
 
-      <button onClick={analytics.paymentAccessed}>
-        Acessar pagamento
-      </button>
-
-      <button onClick={() => analytics.paymentMethod('pix')}>
+      <button onClick={() => trackSelect(flow, 'payment', 'pix')}>
         PIX
       </button>
 
-      <button onClick={() => analytics.paymentMethod('boleto')}>
+      <button onClick={() => trackSelect(flow, 'payment', 'boleto')}>
         Boleto
       </button>
 
-      <button onClick={() => analytics.paymentMethod('cartao')}>
+      <button onClick={() => trackSelect(flow, 'payment', 'cartao')}>
         Cartão
-      </button>
-
-      <button onClick={analytics.qrCodeViewed}>
-        Ver QR Code
       </button>
     </>
   )

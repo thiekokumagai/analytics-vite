@@ -1,27 +1,31 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { analytics } from '../analytics/events'
+import {
+  trackStepEnter,
+  trackStepExit,
+  trackSubmit,
+} from '../analytics/events'
 
 export function Service() {
-  const serviceId = 'consulta_cpf'
+  const flow = 'consulta_cpf'
   const navigate = useNavigate()
 
   useEffect(() => {
     const start = Date.now()
-    analytics.serviceAccessed(serviceId)
+    trackStepEnter(flow, 'service')
 
     return () => {
-      const duration = Math.floor((Date.now() - start) / 1000)
-      analytics.serviceExited(serviceId, duration)
+      trackStepExit(flow, 'service', Date.now() - start)
     }
   }, [])
 
   function handleSearch() {
     try {
-      analytics.serviceFinished(serviceId, 'success')
+      // chamada da API aqui
+      trackSubmit(flow, 'service', 'success')
       navigate('/perfil')
     } catch {
-      analytics.serviceFinished(serviceId, 'error')
+      trackSubmit(flow, 'service', 'error', 'API_ERROR')
     }
   }
 
